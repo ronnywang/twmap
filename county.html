@@ -21,10 +21,16 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="twmap.js"></script>
 <script src="bluegreen.js"></script>
+<div id="info" style="position: absolute; left: 600px; top: 0px"></div>
 <script><!--
-twmap('county.json', 'county.json', 'count.csv', {init_data: bluegreen_init_data, style_cb: bluegreen_style_cb});
+twmap('county.json', 'county.json', 'count.csv', {
+    init_data: bluegreen_init_data,
+    style_cb: bluegreen_style_cb,
+    mouseover_cb: bluegreen_mouseover_cb
+});
 //--></script>
 </body>
 </html>
