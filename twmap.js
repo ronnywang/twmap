@@ -4,6 +4,11 @@ var centered;
 
 var projection = d3.geo.mercator().scale(50000).translate([-16500, 3650]);
 var path = d3.geo.path().projection(projection);
+var zoom = d3.behavior.zoom()
+    .translate(projection.translate())
+    .scale(projection.scale())
+    .scaleExtent([height, 100000 * height])
+    .on("zoom", zoom);
 
 var svg = d3.select("body").append("svg")
 .attr("width", width)
@@ -32,8 +37,16 @@ var ready = function(error, villages, county, data) {
     svg.append('path')
         .datum(county)
         .attr('class', 'county')
-        .attr('d', path);
+        .attr('d', path)
+        .call(zoom);
 }
+
+
+function zoom() {
+        projection.translate(d3.event.translate).scale(d3.event.scale);
+        svg.selectAll("path").attr("d", path);
+}
+
 
 var options = {};
 var twmap = function(geo_map1, geo_map2, data_csv, opt){
