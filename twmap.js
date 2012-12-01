@@ -22,6 +22,9 @@ var ready = function(error, villages, county, data) {
         .enter().append("path")
         .attr("d", path)
     ;
+    if ('undefined' !== typeof(options.mouseover_cb)) {
+        g_dom.on('mouseover', options.mouseover_cb);
+    }
     if ('undefined' !== typeof(options.style_cb)) {
         g_dom.attr('style', options.style_cb);
     }
