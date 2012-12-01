@@ -53,8 +53,8 @@ var ready = function(error, villages, county, blue) {
 
 var twmap = function(geo_map1, geo_map2, data_csv){
     queue()
-        .defer(d3.json, geto_map1)
-        .defer(d3.json, geto_map2)
+        .defer(d3.json, geo_map1)
+        .defer(d3.json, geo_map2)
         .defer(d3.csv, data_csv)
         .await(ready);
 };
