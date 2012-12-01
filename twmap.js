@@ -33,12 +33,15 @@ var ready = function(error, villages, county, blue) {
         .attr("style", function(d) {
                 var rate = rateById[d.id];
                 var rgb = [];
+                var base = 255;
                 if (rate > 0.5) { // 綠
-                rgb = [0, 255, 0];
+                    color = Math.floor(2.0 * base * (1 - rate));
+                    rgb = [color, base, color];
                 } else if (rate < 0.5) { // 藍
-                rgb = [0, 0, 255];
+                    color = Math.floor(2.0 * base * (rate));
+                    rgb = [color, color, base];
                 } else {
-                rgb = [200, 200, 200];
+                    rgb = [base, base, base];
                 }
                 return 'fill:rgb(' + rgb.join(',') + ')';
                     })
