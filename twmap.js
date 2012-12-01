@@ -11,16 +11,20 @@ var svg = d3.select("body").append("svg")
 .attr("class", "Blues");
 
 var ready = function(error, villages, county, data) {
-    options.init_data(data);
+    if ('undefined' !== typeof(options.init_data)) {
+        options.init_data(data);
+    }
 
-    svg.append("g")
+    var g_dom = svg.append("g")
         .attr("class", "villages")
         .selectAll("path")
         .data(villages.features)
         .enter().append("path")
-        .attr("style", options.style_cb)
         .attr("d", path)
     ;
+    if ('undefined' !== typeof(options.style_cb)) {
+        g_dom.attr('style', options.style_cb);
+    }
 
     svg.append('path')
         .datum(county)
