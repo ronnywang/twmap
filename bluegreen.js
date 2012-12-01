@@ -33,3 +33,17 @@ var bluegreen_style_cb = function(d) {
     }
     return 'fill:rgb(' + rgb.join(',') + ')';
 };
+
+var bluegreen_mouseover_cb = function(e){
+    var data = all_data[e.id];
+    if ('undefined' == typeof(data)) {
+        $('#info').text('');
+    }
+    var body = '';
+    for (var i in data) {
+        if ('' !== data[i]) {
+            body += i + ': ' + data[i] + '<br>';
+        }
+    }
+    $('#info').html(body);
+};
