@@ -17,11 +17,9 @@ svg.append("rect")
     .on("click", click_cb);
 
 var g = svg.append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-    .append("g")
-    .attr("id", "states");
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")").append("g");
 
-var ready = function(error, villages, county, data) {
+var ready = function(error, villages, data) {
     if ('undefined' !== typeof(options.init_data)) {
         options.init_data(data);
     }
@@ -29,11 +27,11 @@ var ready = function(error, villages, county, data) {
     var g_dom = g
         .attr("class", "villages")
         .selectAll("path")
-        .data(villages.features)
+        .data(villages.features, function(d){ return d.id; })
         .enter().append("path")
         .attr("d", path)
-        .on('click', click_cb)
-    ;
+        .on('click', click_cb);
+
     if ('undefined' !== typeof(options.mouseover_cb)) {
         g_dom.on('mouseover', options.mouseover_cb);
     }
@@ -42,7 +40,36 @@ var ready = function(error, villages, county, data) {
     }
 }
 
+var loaded = [];
+
 var click_cb = function(d){
+  if ('undefined' === typeof(loaded[d.id])) {
+      loaded[d.id] = true;
+      if (d.id.split('-').length > 2) { // 已經到村里等級了
+          return;
+      }
+      queue()
+          .defer(d3.json, 'map-data/' + d.id + '.json')
+          .await(function(error, sub_polygon){
+              if (!sub_polygon) {
+                  return;
+              }
+              var g_dom = g
+                  .selectAll('path')
+                  .data(sub_polygon.features, function(d){ return d.id; })
+                  .enter().append("path")
+                  .attr("d", path)
+                  .on('click', click_cb)
+              ;
+              if ('undefined' !== typeof(options.mouseover_cb)) {
+                  g_dom.on('mouseover', options.mouseover_cb);
+              }
+              if ('undefined' !== typeof(options.style_cb)) {
+                  g_dom.attr('style', options.style_cb);
+              }
+          });
+    
+  }
   var x = 0,
       y = 0,
       k = 1;
@@ -51,7 +78,13 @@ var click_cb = function(d){
     var centroid = path.centroid(d);
     x = -centroid[0];
     y = -centroid[1];
-    k = 4;
+    if (d.id.split('-').length > 2) {
+        k = 24;
+    } else if (d.id.split('-').length > 1) {
+        k = 8;
+    } else {
+        k = 4;
+    }
     centered = d;
   } else {
     centered = null;
@@ -71,7 +104,6 @@ var twmap = function(geo_map1, geo_map2, data_csv, opt){
     options = opt;
     queue()
         .defer(d3.json, geo_map1)
-        .defer(d3.json, geo_map2)
         .defer(d3.csv, data_csv)
         .await(ready);
 };
