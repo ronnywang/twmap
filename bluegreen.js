@@ -1,7 +1,7 @@
-var rate_data = null;
+var all_data = null;
 
 var bluegreen_init_data = function(data){
-    rate_data = [];
+    all_data = [];
     data.forEach(function(d){
         var id;
         if (d['村里']) {
@@ -11,12 +11,15 @@ var bluegreen_init_data = function(data){
         } else {
             id = d['#縣市'];
         }
-        rate_data[id] = parseInt(d['1得票']) / (parseInt(d['1得票']) + parseInt(d['2得票']));
+        all_data[id] = d;
     });
 };
 
 var bluegreen_style_cb = function(d) {
-    var rate = rate_data[d.id];
+    if ('undefined' == typeof(all_data[d.id])) {
+        return '';
+    }
+    var rate = parseInt(all_data[d.id]['1得票']) / (parseInt(all_data[d.id]['1得票']) + parseInt(all_data[d.id]['2得票']));
     var rgb = [];
     var base = 255;
     if (rate > 0.5) { // 綠
