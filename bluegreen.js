@@ -39,6 +39,7 @@ var bluegreen_mouseover_cb = function(e){
     var data = all_data[e.id];
     if ('undefined' == typeof(data)) {
         $('#info').text('不知道的鄉鎮: ' + e.id);
+        return;
     }
     var body = '';
     for (var i in data) {
