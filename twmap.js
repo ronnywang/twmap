@@ -1,8 +1,8 @@
-var width = 960,
-    height = 600;
+var width = 1200,
+    height = 700;
 var centered;
 
-var projection = d3.geo.mercator().scale(50000).translate([-16500, 3650]);
+var projection = d3.geo.mercator().scale(50000).translate([-17000, 3350]);
 var path = d3.geo.path().projection(projection);
 
 var svg = d3.select("body").append("svg")
@@ -13,7 +13,7 @@ var svg = d3.select("body").append("svg")
 svg.append("rect")
     .attr("width", width)
     .attr("height", height)
-    .attr('style', 'fill: white')
+    .attr('style', 'fill: none')
     .on("click", click_cb);
 
 var g = svg.append("g")

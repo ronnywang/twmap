@@ -43,7 +43,7 @@ var test_init_data = function(data){
             all_data[index][global_data["table"]["cols"][j]] = global_data["table"]["rows"][i][j];
         }
     }
-    console.log(all_data);
+    //console.log(all_data);
 };
 
 var test_style_cb = function(d) {
@@ -68,7 +68,7 @@ var test_style_cb = function(d) {
 };
 
 var test_mouseover_cb = function(e){
-    console.log(e);
+    //console.log(e);
     var data = all_data[e.id];
     if ('undefined' == typeof(data)) {
         $('#info').text('不知道的鄉鎮: ' + e.id);
