@@ -17,7 +17,8 @@ var bluegreen_init_data = function(data){
 
 var bluegreen_style_cb = function(d) {
     if ('undefined' == typeof(all_data[d.id])) {
-        return '';
+        console.log('Unknwon id: ' + d.id);
+        return 'fill:white';
     }
     var rate = parseInt(all_data[d.id]['1得票']) / (parseInt(all_data[d.id]['1得票']) + parseInt(all_data[d.id]['2得票']));
     var rgb = [];
