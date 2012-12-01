@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+
+.villages {
+  stroke: #fff;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.county {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+</style>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="twmap.js"></script>
+<script><!--
+twmap('village.json', 'county.json', 'count.csv');
+//--></script>
+</body>
+</html>
