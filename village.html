@@ -22,8 +22,9 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="twmap.js"></script>
+<script src="bluegreen.js"></script>
 <script><!--
-twmap('village.json', 'county.json', 'count.csv');
+twmap('village.json', 'county.json', 'count.csv', {init_data: bluegreen_init_data, style_cb: bluegreen_style_cb});
 //--></script>
 </body>
 </html>
