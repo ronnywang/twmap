@@ -51,13 +51,7 @@ var click_cb = function(d){
     var centroid = path.centroid(d);
     x = -centroid[0];
     y = -centroid[1];
-    if (d.id.split('-').length > 2) {
-        k = 24;
-    } else if (d.id.split('-').length > 1) {
-        k = 8;
-    } else {
-        k = 4;
-    }
+    k = 4;
     centered = d;
   } else {
     centered = null;
