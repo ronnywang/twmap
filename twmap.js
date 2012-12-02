@@ -43,33 +43,6 @@ var ready = function(error, villages, data) {
 var loaded = [];
 
 var click_cb = function(d){
-  if ('undefined' === typeof(loaded[d.id])) {
-      loaded[d.id] = true;
-      if (d.id.split('-').length > 2) { // 已經到村里等級了
-          return;
-      }
-      queue()
-          .defer(d3.json, 'map-data/' + d.id + '.json')
-          .await(function(error, sub_polygon){
-              if (!sub_polygon) {
-                  return;
-              }
-              var g_dom = g
-                  .selectAll('path')
-                  .data(sub_polygon.features, function(d){ return d.id; })
-                  .enter().append("path")
-                  .attr("d", path)
-                  .on('click', click_cb)
-              ;
-              if ('undefined' !== typeof(options.mouseover_cb)) {
-                  g_dom.on('mouseover', options.mouseover_cb);
-              }
-              if ('undefined' !== typeof(options.style_cb)) {
-                  g_dom.attr('style', options.style_cb);
-              }
-          });
-    
-  }
   var x = 0,
       y = 0,
       k = 1;
