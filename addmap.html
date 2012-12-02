@@ -51,6 +51,7 @@
         <input type="radio" name="color2" value="0,0,0">黑
         <input type="radio" name="color2" value="255,255,255">白
         <br>
+        標題: <input type="text" name="title">
         <button type="submit">產生連結</button>
     </form>
     <input type="text" id="result_url" size="120" readonly="readonly" onfocus="this.select(); return false;" value="test">
@@ -131,6 +132,7 @@ $('#step3-form').submit(function(e){
         options.push('value2=' + $.inArray('value2', column_types));
         options.push('color2=' + encodeURIComponent($('#step3-form input[name="color2"]:checked').val()));
     }
+    options.push('title=' + encodeURIComponent($('input[name="title"]').val()));
 
     $('#result_url').val($('<a></a>').attr('href', 'fusion.html?' + options.join('&'))[0].href);
 });
