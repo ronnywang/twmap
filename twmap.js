@@ -30,13 +30,13 @@ var ready = function(error, villages, data) {
         .data(villages.features, function(d){
             var ids = [];
             if (d.properties.county) {
-                ids[] = d.properties.county;
+                ids.push(d.properties.county);
             }
             if (d.properties.town) {
-                ids[] = d.properties.town;
+                ids.push(d.properties.town);
             }
             if (d.properties.village) {
-                ids[] = d.properties.village;
+                ids.push(d.properties.village);
             }
             return ids.join('-');
         })
