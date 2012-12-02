@@ -69,8 +69,10 @@ var click_cb = function(d){
 var options = {};
 var twmap = function(geo_map1, geo_map2, data_csv, opt){
     options = opt;
-    queue()
-        .defer(d3.json, geo_map1)
-        .defer(d3.csv, data_csv)
-        .await(ready);
+    var job = queue()
+        .defer(d3.json, geo_map1);
+    if (data_csv) {
+        job.defer(d3.csv, data_csv);
+    }
+    job.await(ready);
 };
