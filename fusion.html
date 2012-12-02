@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+
+.villages {
+  stroke: #fff;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.county {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.white{
+	fill: none;
+ 	pointer-events: all;
+}
+
+
+</style>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="twmap.js"></script>
+<div id="info" style="position: absolute; left: 600px; top: 0px">test</div>
+<script><!--
+
+var terms = document.location.search.substr(1).split('&');
+var params = {};
+for (var i = 0; i < terms.length; i ++) {
+    params[terms[i].split('=')[0]] = decodeURIComponent(terms[i].split('=')[1]);
+}
+
+var all_data = {};
+var handleData = function(data){
+    var id;
+    params.value1_column = data.table.cols[parseInt(params.value1)];
+    params.value2_column = data.table.cols[parseInt(params.value2)];
+    for (var i = 0; i < data.table.rows.length; i ++) {
+        id = [];
+        id.push(data.table.rows[i][parseInt(params.county_column, 10)]);
+        if (params.maplevel != 'county') {
+            id.push(data.table.rows[i][parseInt(params.town_column, 10)]);
+        }
+        if (params.maplevel == 'village') {
+            id.push(data.table.rows[i][parseInt(params.village_column, 10)]);
+        }
+        id = id.join('-');
+
+        d = {};
+        for (var j = 0; j < data.table.cols.length; j ++) {
+            d[data.table.cols[j]] = data.table.rows[i][j];
+        }
+        all_data[id] = d;
+    }
+
+    twmap(params.maplevel + '.json', false, false, {
+        style_cb: function(d){
+            if ('undefined' == typeof(all_data[d.id])) {
+                console.log('unknown id: ' + d.id);
+                return 'fill:white';
+            }
+            if (parseInt(params.maptype) == 2) { // 2 number
+                var rate = 1.0 * parseInt(all_data[d.id][params.value1_column]) / (parseInt(all_data[d.id][params.value1_column]) + parseInt(all_data[d.id][params.value2_column]));
+                var rgb = [];
+                var color1 = params.color1.split(',');
+                var color2 = params.color2.split(',');
+                if (rate > 0.5) {
+                    for (i = 0; i < 3; i ++) {
+                        rgb[i] = Math.floor(parseInt(color1[i]) - (parseInt(color1[i]) - 255) * 2 * (1 - rate));
+                    }
+                } else {
+                    for (i = 0; i < 3; i ++) {
+                        rgb[i] = Math.floor(parseInt(color2[i]) + (255 - parseInt(color2[i])) * 2 * rate);
+                    }
+                }
+                return 'fill:rgb(' + rgb.join(',') + ')';
+            } else {
+                console.log(params);
+            }
+        },
+        mouseover_cb: function(e){
+            var data = all_data[e.id];
+            if ('undefined' == typeof(data)) {
+                $('#info').text('不知道的鄉鎮: ' + e.id);
+            }
+            var body = '';
+            for (var i in data) {
+                if ('' !== data[i]) {
+                    body += i + ': ' + data[i] + '<br>';
+                }
+            }
+            $('#info').html(body);
+        }
+    });
+}
+
+$.ajax(
+    'https://www.google.com/fusiontables/api/query/?sql=' + encodeURIComponent('SELECT * FROM '+ params.docid), {
+        dataType: 'jsonp',
+        success: handleData,
+        jsonp: 'jsonCallback'
+});
+
+//--></script>
+</body>
+</html>

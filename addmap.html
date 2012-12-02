@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>台灣鄉鎮村里圖表地圖產生器</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+<body>
+<div id="step1-div">
+    <h3>第一步</h3>
+    Google Fusion Table 網址: 
+    <form id="step1">
+        <input type="text" placeholder="https://www.google.com/fusiontables/DataSource?docid=xxxxxx" size="120" id="url" value="docid=1zzwrd1E92RBR8tqNYSUz6d94zZAinSCayvxVECE">
+        <button type="submit">下一步</button>
+    </form>
+</div>
+<div id="step2-div" style="display:none">
+    <h3>第二步</h3>
+    選擇參考欄位:
+    <table border="1">
+    </table>
+</div>
+<div id="step3-div" style="display:none">
+    <h3>第三步</h3>
+    <form id="step3-form">
+        選擇地圖層級:
+        <input type="radio" name="maplevel" value="county" checked="checked">縣市
+        <input type="radio" name="maplevel" value="town">鄉鎮縣市
+        <input type="radio" name="maplevel" value="village">村里
+        <br>
+        選擇地圖類型:<br>
+        <input type="radio" name="maptype" value="1" checked="checked">單色(看一個數值，判斷整體數值狀況, Ex: 地價地圖, 人口密度...)<br>
+        <input type="radio" name="maptype" value="2">雙色(看兩個數值，比較兩種數值, Ex: 藍綠地圖, 男女比例...)<br>
+        顏色1(對應數值1):
+        <input type="radio" name="color1" value="255,0,0" checked="checked">紅
+        <input type="radio" name="color1" value="0,255,0">綠
+        <input type="radio" name="color1" value="0,0,255">藍
+        <input type="radio" name="color1" value="255,255,0">黃
+        <input type="radio" name="color1" value="255,0,255">紫
+        <input type="radio" name="color1" value="0,0,0">黑
+        <input type="radio" name="color1" value="255,255,255">白
+        <br>
+        顏色2(對應數值2, 如果地圖類型是單色這個就不用選了):
+        <input type="radio" name="color2" value="255,0,0">紅
+        <input type="radio" name="color2" value="0,255,0" checked="checked">綠
+        <input type="radio" name="color2" value="0,0,255">藍
+        <input type="radio" name="color2" value="255,255,0">黃
+        <input type="radio" name="color2" value="255,0,255">紫
+        <input type="radio" name="color2" value="0,0,0">黑
+        <input type="radio" name="color2" value="255,255,255">白
+        <br>
+        <button type="submit">產生連結</button>
+    </form>
+    <input type="text" id="result_url" size="120" readonly="readonly" onfocus="this.select(); return false;" value="test">
+</div>
+<script><!--
+var fusion_table_data = null;
+var column_options = {
+    unused: '---',
+    county: '縣市欄位',
+    town: '鄉鎮市區欄位',
+    village: '村里欄位',
+    value1: '數值1',
+    value2: '數值2',
+};
+
+$('#step3-form').submit(function(e){
+    e.preventDefault();
+
+    var options = [];
+    if (!$('#data-docid').data('docid')) {
+        alert('找不到 Google Fusion Table 網址');
+        return;
+    }
+    options.push('docid=' + encodeURIComponent($('#data-docid').data('docid')));
+
+    var maplevel = $('#step3-form input[name="maplevel"]:checked').val();
+    if (!maplevel) {
+        alert('未選擇地圖層級');
+        return;
+    }
+    options.push('maplevel=' + maplevel);
+
+    var i;
+    var column_types = [];
+    for (i = 0; i < fusion_table_data.table.cols.length; i ++) {
+        column_types[i] = $('#type-' + i).val();
+    }
+
+    // 縣市、鄉鎮縣市、村里欄位
+    if (-1 == $.inArray('county', column_types)) {
+        alert('一定要指定縣市欄位');
+        return;
+    }
+    options.push('county_column=' + $.inArray('county', column_types));
+
+    if ('county' !== maplevel) {
+        if (-1 == $.inArray('town', column_types)) {
+            alert('需要指定鄉鎮縣市欄位');
+            return;
+        }
+        options.push('town_column=' + $.inArray('town', column_types));
+    }
+
+    if ('village' == maplevel) {
+        if (-1 == $.inArray('village', column_types)) {
+            alert('需要指定村里欄位');
+            return;
+        }
+        options.push('village_column=' + $.inArray('village', column_types));
+    }
+
+    options.push('maptype=' + $('#step3-form input[name="maptype"]:checked').val());
+
+    // 數值1 一定要指定
+    if (-1 == $.inArray('value1', column_types)) {
+        alert('需要指定數值1');
+        return;
+    }
+    options.push('value1=' + $.inArray('value1', column_types));
+    options.push('color1=' + encodeURIComponent($('#step3-form input[name="color1"]:checked').val()));
+
+    if (2 == $('#step3-form input[name="maptype"]:checked').val()) {
+        // 數值1 一定要指定
+        if (-2 == $.inArray('value1', column_types)) {
+            alert('需要指定數值1');
+            return;
+        }
+        options.push('value2=' + $.inArray('value2', column_types));
+        options.push('color2=' + encodeURIComponent($('#step3-form input[name="color2"]:checked').val()));
+    }
+
+    $('#result_url').val($('<a></a>').attr('href', 'fusion.html?' + options.join('&'))[0].href);
+});
+
+$('#step1').submit(function(e){
+    e.preventDefault();
+
+    var url = $('#url').val();
+    var matches = url.match(/docid=([^&]*)/);
+    if (!matches) {
+        alert('這不是 Fusion Table 網址');
+        return;
+    }
+    var docid = matches[1];
+
+    $.ajax(
+        'https://www.google.com/fusiontables/api/query/?sql=' + encodeURIComponent('SELECT * FROM ' + docid), {
+        dataType: 'jsonp',
+        success: function(ret){
+            $('#step1').after(
+                $('<a></a>')
+                .attr({id: 'data-docid', target: '_blank', href: url})
+                .text(url)
+                .data('docid', docid)
+            ).remove();
+            fusion_table_data = ret;
+
+            $('#step2-div').show();
+            var thead_dom = $('<thead></thead>');
+            var tr_dom = $('<tr></tr>');
+            var i, j;
+            for (i = 0; i < ret.table.cols.length; i ++) {
+                tr_dom.append($('<td></td>').text(ret.table.cols[i]));
+            }
+            thead_dom.append(tr_dom);
+
+            // 選單
+            var select_dom;
+            tr_dom = $('<tr></tr>');
+            for (i = 0; i < ret.table.cols.length; i ++) {
+                select_dom = $('<select></select>').attr('id', 'type-' + i);
+                for (j in column_options) {
+                    select_dom.append($('<option></option>').attr({value: j}).text(column_options[j]));
+
+                }
+                tr_dom.append($('<td></td>').append(select_dom));
+            }
+            thead_dom.append(tr_dom);
+            $('#step2-div table').append(thead_dom);
+
+            var tbody_dom = $('<tbody></tbody>');
+            if (!ret.table.rows.length) {
+                tbody_dom.append($('<tr></tr>').append($('<td></td>').attr('colspan', ret.table.cols.length).text('沒有任何資料')));
+                $('#step2-div table').append(tbody_dom);
+                return;
+            }
+            for (i = 0; i < ret.table.rows.length && i < 3; i ++) {
+                tr_dom = $('<tr></tr>');
+                for (j = 0; j < ret.table.rows[i].length; j ++) {
+                    tr_dom.append($('<td></td>').text(ret.table.rows[i][j]));
+                }
+                tbody_dom.append(tr_dom);
+            }
+            tbody_dom.append($('<tr></tr>').append($('<td></td>').attr('colspan', ret.table.cols.length).text('共有' + ret.table.rows.length + '筆資料')));
+            $('#step2-div table').append(tbody_dom);
+
+            // 先找縣市欄位
+            var counties = ["宜蘭縣", "基隆市", "台北市", "新北市", "桃園縣", "新竹市", "新竹縣", "苗栗縣", "台中市", "南投縣", "彰化縣", "雲林縣", "嘉義市", "嘉義縣", "台南市", "高雄市", "屏東縣", "台東縣", "花蓮縣", "澎湖縣", "金門縣", "連江縣", "臺北市", "臺中市", "臺南市", "臺北縣", "高雄縣", "臺中縣"];
+            for (i = 0; i < ret.table.rows[0].length; i ++) {
+                if (-1 !== $.inArray(ret.table.rows[0][i], counties)) {
+                    $('#type-' + i).val('county');
+                }
+            }
+
+            // 再找鄉鎮市區欄位(只找前 20 row)
+            for (i = 0; i < ret.table.rows.length && i < 20; i ++) {
+                for (j = 0; j < ret.table.rows[i].length; j ++) {
+                    if ('string' == typeof(ret.table.rows[i][j]) && ret.table.rows[i][j].match(/(區|鎮|鄉)$/)) {
+                        $('#type-' + j).val('town');
+                    }
+                }
+            }
+
+            // 再找村里欄位(只找前 20 row)
+            for (i = 0; i < ret.table.rows.length && i < 20; i ++) {
+                for (j = 0; j < ret.table.rows[i].length; j ++) {
+                    if ('string' == typeof(ret.table.rows[i][j]) && ret.table.rows[i][j].match(/(村|里)$/)) {
+                        $('#type-' + j).val('village');
+                    }
+                }
+            }
+            $('#step3-div').show();
+        },
+        jsonp: 'jsonCallback'
+    });
+});
+//--></script>
+</body>
+</html>
