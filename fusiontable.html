@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+
+.villages {
+  stroke: #fff;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.county {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.white{
+	fill: none;
+ 	pointer-events: all;
+}
+
+
+</style>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="twmap.js"></script>
+<script src="fusiontable.js"></script>
+<div id="info" style="position: absolute; left: 600px; top: 0px">test</div>
+<script><!--
+
+var global_data = {};
+var hash=(!window.location.hash)?"":window.location.hash; 
+console.log(hash.substr(1)+"");
+
+$.get(
+	'https://www.google.com/fusiontables/api/query/?jsonCallback=?&sql=' + encodeURIComponent('SELECT * FROM '+hash.substr(1)), 
+	handleData, 'jsonp'); 
+
+function handleData(data)
+{
+	global_data = data;
+		console.log(data);
+		twmap('county.json', 'county.json', 'count.csv', {
+    			init_data: test_init_data,
+    			style_cb: test_style_cb,
+    			mouseover_cb: test_mouseover_cb
+			});
+
+}
+
+//--></script>
+</body>
+</html>
