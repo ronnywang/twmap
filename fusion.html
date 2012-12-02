@@ -50,10 +50,10 @@ var handleData = function(data){
 
         id = [];
         id.push(data.table.rows[i][parseInt(params.county_column, 10)]);
-        if (params.maplevel != 'county') {
+        if (!params.maplevel.match('county')) {
             id.push(data.table.rows[i][parseInt(params.town_column, 10)]);
         }
-        if (params.maplevel == 'village') {
+        if (params.maplevel.match('village')) {
             id.push(data.table.rows[i][parseInt(params.village_column, 10)]);
         }
         id = id.join('-');
@@ -65,14 +65,27 @@ var handleData = function(data){
         all_data[id] = d;
     }
 
+    var getIDFromProperties = function(properties){
+        var ids = [];
+        if (properties.county) {
+            ids.push(properties.county);
+        }
+        if (properties.town) {
+            ids.push(properties.town);
+        }
+        if (properties.village) {
+            ids.push(properties.village);
+        }
+        return ids.join('-');
+    };
     twmap(params.maplevel + '.json', false, false, {
         style_cb: function(d){
-            if ('undefined' == typeof(all_data[d.id])) {
-                console.log('unknown id: ' + d.id);
+            var map_id = getIDFromProperties(d.properties);
+            if ('undefined' == typeof(all_data[map_id])) {
                 return 'fill:white';
             }
             if (parseInt(params.maptype) == 2) { // 2 number
-                var rate = 1.0 * parseInt(all_data[d.id][params.value1_column]) / (parseInt(all_data[d.id][params.value1_column]) + parseInt(all_data[d.id][params.value2_column]));
+                var rate = 1.0 * parseInt(all_data[map_id][params.value1_column]) / (parseInt(all_data[map_id][params.value1_column]) + parseInt(all_data[map_id][params.value2_column]));
                 var rgb = [];
                 var color1 = params.color1.split(',');
                 var color2 = params.color2.split(',');
@@ -97,9 +110,11 @@ var handleData = function(data){
             }
         },
         mouseover_cb: function(e){
-            var data = all_data[e.id];
+            var map_id = getIDFromProperties(e.properties);
+
+            var data = all_data[map_id];
             if ('undefined' == typeof(data)) {
-                $('#info').text('不知道的鄉鎮: ' + e.id);
+                $('#info').text('不知道的鄉鎮: ' + map_id);
             }
             var body = '';
             for (var i in data) {
