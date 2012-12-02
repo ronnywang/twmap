@@ -43,7 +43,11 @@ var handleData = function(data){
     var id;
     params.value1_column = data.table.cols[parseInt(params.value1)];
     params.value2_column = data.table.cols[parseInt(params.value2)];
+    params.max_value1 = params.min_value1 = false;
     for (var i = 0; i < data.table.rows.length; i ++) {
+        params.max_value1 = (false === params.max_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.max(params.max_value1, data.table.rows[i][parseInt(params.value1)]);
+        params.min_value1 = (false === params.min_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.min(params.min_value1, data.table.rows[i][parseInt(params.value1)]);
+
         id = [];
         id.push(data.table.rows[i][parseInt(params.county_column, 10)]);
         if (params.maplevel != 'county') {
@@ -83,7 +87,13 @@ var handleData = function(data){
                 }
                 return 'fill:rgb(' + rgb.join(',') + ')';
             } else {
-                console.log(params);
+                var rate = 1.0 * parseInt(all_data[map_id][params.value1_column]) / (params.max_value1);
+                var rgb = [];
+                var color1 = params.color1.split(',');
+                for (i = 0; i < 3; i ++) {
+                    rgb[i] = Math.floor(255 - (255 - parseInt(color1[i])) * rate);
+                }
+                return 'fill:rgb(' + rgb.join(',') + ')';
             }
         },
         mouseover_cb: function(e){
