@@ -24,9 +24,11 @@
     <h3>第三步</h3>
     <form id="step3-form">
         選擇地圖層級:
-        <input type="radio" name="maplevel" value="county" checked="checked">縣市
-        <input type="radio" name="maplevel" value="town">鄉鎮縣市
-        <input type="radio" name="maplevel" value="village">村里
+        <input type="radio" name="maplevel" value="county2010" checked="checked">縣市(五都升格後)
+        <input type="radio" name="maplevel" value="county1984">縣市(五都前)
+        <input type="radio" name="maplevel" value="town2010">鄉鎮縣市(五都升格後)
+        <input type="radio" name="maplevel" value="town1984">鄉鎮縣市(五都前)
+        <input type="radio" name="maplevel" value="village2010">村里(五都升格後)
         <br>
         選擇地圖類型:<br>
         <input type="radio" name="maptype" value="1" checked="checked">單色(看一個數值，判斷整體數值狀況, Ex: 地價地圖, 人口密度...)<br>
@@ -94,7 +96,7 @@ $('#step3-form').submit(function(e){
     }
     options.push('county_column=' + $.inArray('county', column_types));
 
-    if ('county' !== maplevel) {
+    if (!maplevel.match('county')) {
         if (-1 == $.inArray('town', column_types)) {
             alert('需要指定鄉鎮縣市欄位');
             return;
@@ -102,7 +104,7 @@ $('#step3-form').submit(function(e){
         options.push('town_column=' + $.inArray('town', column_types));
     }
 
-    if ('village' == maplevel) {
+    if (maplevel.match('village')) {
         if (-1 == $.inArray('village', column_types)) {
             alert('需要指定村里欄位');
             return;
