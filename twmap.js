@@ -27,7 +27,19 @@ var ready = function(error, villages, data) {
     var g_dom = g
         .attr("class", "villages")
         .selectAll("path")
-        .data(villages.features, function(d){ return d.id; })
+        .data(villages.features, function(d){
+            var ids = [];
+            if (d.properties.county) {
+                ids[] = d.properties.county;
+            }
+            if (d.properties.town) {
+                ids[] = d.properties.town;
+            }
+            if (d.properties.village) {
+                ids[] = d.properties.village;
+            }
+            return ids.join('-');
+        })
         .enter().append("path")
         .attr("d", path)
         .on('click', click_cb);
