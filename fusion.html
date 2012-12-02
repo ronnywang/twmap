@@ -78,7 +78,7 @@ var handleData = function(data){
                     }
                 } else {
                     for (i = 0; i < 3; i ++) {
-                        rgb[i] = Math.floor(parseInt(color2[i]) + (255 - parseInt(color2[i])) * 2 * (rate - 0.5));
+                        rgb[i] = Math.floor(parseInt(color2[i]) + (255 - parseInt(color2[i])) * 2 * rate);
                     }
                 }
                 return 'fill:rgb(' + rgb.join(',') + ')';
