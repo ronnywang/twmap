@@ -31,9 +31,9 @@
         <input type="radio" name="maplevel" value="village2010">村里(五都升格後)
         <br>
         選擇地圖類型:<br>
-        <input type="radio" name="maptype" value="1" checked="checked">單色(看一個數值，判斷整體數值狀況, Ex: 地價地圖, 人口密度...)<br>
-        <input type="radio" name="maptype" value="2">雙色(看兩個數值，比較兩種數值, Ex: 藍綠地圖, 男女比例...)<br>
-        顏色1(對應數值1):
+        <input type="radio" name="maptype" value="1" checked="checked">單一數據 (看一個數值，判斷整體數值狀況, Ex: 地價地圖, 人口密度...)<br>
+        <input type="radio" name="maptype" value="2">數據比較 (看兩個數值，比較兩種數值, Ex: 藍綠地圖, 男女比例...)<br>
+        顏色1(單一數據時，這會代表正值的顏色，數據比較時，這會代表數值1的值):
         <input type="radio" name="color1" value="255,0,0" checked="checked">紅
         <input type="radio" name="color1" value="0,255,0">綠
         <input type="radio" name="color1" value="0,0,255">藍
@@ -42,7 +42,7 @@
         <input type="radio" name="color1" value="0,0,0">黑
         <input type="radio" name="color1" value="255,255,255">白
         <br>
-        顏色2(對應數值2, 如果地圖類型是單色這個就不用選了):
+        顏色2(單一數據時，這會代表負值的顏色，數據比較時，這會代表數值2的值):
         <input type="radio" name="color2" value="255,0,0">紅
         <input type="radio" name="color2" value="0,255,0" checked="checked">綠
         <input type="radio" name="color2" value="0,0,255">藍
@@ -130,8 +130,8 @@ $('#step3-form').submit(function(e){
             return;
         }
         options.push('value2=' + $.inArray('value2', column_types));
-        options.push('color2=' + encodeURIComponent($('#step3-form input[name="color2"]:checked').val()));
     }
+    options.push('color2=' + encodeURIComponent($('#step3-form input[name="color2"]:checked').val()));
     options.push('title=' + encodeURIComponent($('input[name="title"]').val()));
 
     $('#result_url').val($('<a></a>').attr('href', 'fusion.html?' + options.join('&'))[0].href);
