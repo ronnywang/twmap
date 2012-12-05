@@ -62,7 +62,7 @@ var handleData = function(data){
         }
 
         id = [];
-        id.push(data.table.rows[i][parseInt(params.county_column, 10)]);
+        id.push(data.table.rows[i][parseInt(params.county_column, 10)].replace('台', '臺'));
         if (!params.maplevel.match('county')) {
             id.push(data.table.rows[i][parseInt(params.town_column, 10)].replace('台', '臺'));
         }
