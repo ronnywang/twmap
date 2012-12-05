@@ -53,10 +53,10 @@ var handleData = function(data){
     params.max_value1 = params.min_value1 = false;
     for (var i = 0; i < data.table.rows.length; i ++) {
         if (params.maptype == 1) { // 只有一個數字的話記最大最小值
-            params.max_value1 = (false === params.max_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.max(params.max_value1, data.table.rows[i][parseInt(params.value1)]);
-            params.min_value1 = (false === params.min_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.min(params.min_value1, data.table.rows[i][parseInt(params.value1)]);
+            params.max_value1 = (false === params.max_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.max(params.max_value1, parseFloat(data.table.rows[i][parseInt(params.value1)]));
+            params.min_value1 = (false === params.min_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.min(params.min_value1, parseFloat(data.table.rows[i][parseInt(params.value1)]));
         } else {
-            rate = 1.0 * parseInt(data.table.rows[i][parseInt(params.value1)]) / (parseInt(data.table.rows[i][parseInt(params.value1)]) + parseInt(data.table.rows[i][parseInt(params.value2)]));
+            rate = 1.0 * parseFloat(data.table.rows[i][parseInt(params.value1)]) / (parseFloat(data.table.rows[i][parseInt(params.value1)]) + parseFloat(data.table.rows[i][parseInt(params.value2)]));
             params.max_value1 = (false === params.max_value1) ? rate : Math.max(rate, params.max_value1);
             params.min_value1 = (false === params.min_value1) ? rate : Math.min(rate, params.min_value1);
         }
@@ -115,11 +115,19 @@ var handleData = function(data){
                 }
                 return 'fill:rgb(' + rgb.join(',') + ')';
             } else {
-                var rate = 1.0 * parseInt(all_data[map_id][params.value1_column]) / (params.max_value1);
+                var rate;
+                var color;
+                if (parseFloat(all_data[map_id][params.value1_column]) < 0) {
+                    rate  = 1.0 * parseFloat(all_data[map_id][params.value1_column]) / (params.min_value1);
+                    color = params.color2.split(',');
+                } else {
+                    rate  = 1.0 * parseFloat(all_data[map_id][params.value1_column]) / (params.max_value1);
+                    color = params.color1.split(',');
+                }
+                console.log(rate);
                 var rgb = [];
-                var color1 = params.color1.split(',');
                 for (i = 0; i < 3; i ++) {
-                    rgb[i] = Math.floor(255 - (255 - parseInt(color1[i])) * rate);
+                    rgb[i] = Math.floor(255 - (255 - parseInt(color[i])) * rate);
                 }
                 return 'fill:rgb(' + rgb.join(',') + ')';
             }
