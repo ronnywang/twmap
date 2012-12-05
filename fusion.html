@@ -81,7 +81,7 @@ var handleData = function(data){
     var getIDFromProperties = function(properties){
         var ids = [];
         if (properties.county) {
-            ids.push(properties.county);
+            ids.push(properties.county.replace('台', '臺'));
         }
         if (properties.town) {
             ids.push(properties.town);
