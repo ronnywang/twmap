@@ -19,7 +19,8 @@ svg.append("rect")
 var g = svg.append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")").append("g");
 
-var ready = function(error, villages, data) {
+var ready = function(villages, data) {
+console.log(arguments);
     if ('undefined' !== typeof(options.init_data)) {
         options.init_data(data);
     }
