@@ -1,0 +1,53 @@
+
+.villages {
+	stroke: #888;
+	stroke-width: .5px;
+	stroke-opacity: .5;
+}
+
+
+body{
+	background:#fefefe;
+}
+
+
+#containter{
+	margin: 0px auto;	
+	width:1200px;
+
+	
+}
+#header
+{
+	font-size: 50px;
+	font-weight: bold;
+	
+}
+
+#map_container
+{
+	border: 1.5px #eee outset;
+	padding:5px;
+	width:800px;	
+	background:#eee;
+}
+
+#info{
+	float:right;
+	width:360px;
+	height:280px;
+	border:1px outset #eee;
+	padding:5px;
+	background: #eee;
+}
+
+#graph{
+	clear:right;
+	float:right;
+	width:360px;
+	margin-top: 10px;
+	height:300px;
+	border:1px outset #eee;
+	padding:5px;
+	background: #eee;
+}

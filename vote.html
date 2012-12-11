@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="./vote.css">
+
+
+
+</head>
+<body>
+  <div id="containter">
+
+    <div id="header">2012 總統大選投票圖</div>
+    <div id="info"></div>
+    <div id="graph"></div>
+    <div id="map_container">
+
+      <div id="map"></div>
+    </div>
+  </div>
+  
+  <!-- Libraray -->
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/queue.v1.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+  <!-- Kernel JS -->  
+  <script src="twmap.js"></script>
+  <!-- Application JS -->
+  <script src="vote.js"></script>
+  <script src="bluegreen.js"></script>
+  <script><!--
+
+  var global_data = {};
+  if (!window.location.hash)
+  {
+    TWmap.twmap('county.json', 'county.json', 'count.csv', {
+      init_data: bluegreen_init_data,
+      style_cb: bluegreen_style_cb,
+      mouseover_cb: bluegreen_mouseover_cb      
+    });
+  }else{
+
+
+    var hash = window.location.hash; 
+    console.log(hash.substr(1)+"");
+    $.get(
+      'https://www.google.com/fusiontables/api/query/?jsonCallback=?&sql=' + encodeURIComponent('SELECT * FROM '+hash.substr(1)), 
+      handleData, 'jsonp'); 
+
+  }
+
+  function handleData(data)
+  {
+    var detail_map = {};
+    if(window.location.hash.substr(1)=="1zzwrd1E92RBR8tqNYSUz6d94zZAinSCayvxVECE")
+    {
+      detail_map = 'town.json';
+    }else{
+      detail_map = 'county.json';
+      TWmap.processData = function(d){
+        return parseFloat(d['數值']);
+      }
+    }
+    
+    
+   global_data = data;
+   console.log(data);
+   TWmap.twmap(detail_map, 'county.json', 'count.csv', {
+     init_data: test_init_data,
+     style_cb: test_style_cb,
+     mouseover_cb: test_mouseover_cb,
+     mouseout_cb: test_mouseout_cb
+   });
+
+ }
+
+ //--></script>
+</body>
+</html>
