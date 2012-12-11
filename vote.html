@@ -31,7 +31,6 @@
   <script src="bluegreen.js"></script>
   <script><!--
 
-  var global_data = {};
   if (!window.location.hash)
   {
     TWmap.twmap('county.json', 'county.json', 'count.csv', {
@@ -57,24 +56,24 @@
     {
       detail_map = 'town.json';
     }else{
-      detail_map = 'county.json';
+      detail_map = 'county2.json';
       TWmap.processData = function(d){
         return parseFloat(d['數值']);
       }
     }
     
     
-   global_data = data;
-   console.log(data);
-   TWmap.twmap(detail_map, 'county.json', 'count.csv', {
+    TWmap.global_data = data;
+    console.log(data);
+    TWmap.twmap(detail_map, 'county.json', 'count.csv', {
      init_data: test_init_data,
      style_cb: test_style_cb,
      mouseover_cb: test_mouseover_cb,
      mouseout_cb: test_mouseout_cb
    });
 
- }
+  }
 
- //--></script>
+  //--></script>
 </body>
 </html>

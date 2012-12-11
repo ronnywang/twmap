@@ -16,31 +16,31 @@ var test_init_data = function(data){
     var villageIndex = -1;
     var dataIndex = -1;
 
-    for( var i in global_data["table"]["cols"] )
+    for( var i in TWmap.global_data["table"]["cols"] )
     {
-        if(global_data["table"]["cols"][i]=="#縣市")
+        if(TWmap.global_data["table"]["cols"][i]=="#縣市")
             countyIndex = i;
-        else if(global_data["table"]["cols"][i]=="鄉鎮")
+        else if(TWmap.global_data["table"]["cols"][i]=="鄉鎮")
             cityIndex = i;
-        else if(global_data["table"]["cols"][i]=="村里")
+        else if(TWmap.global_data["table"]["cols"][i]=="村里")
             villageIndex = i;
-        column_name[global_data["table"]["cols"][i]] = i;
+        column_name[TWmap.global_data["table"]["cols"][i]] = i;
     }
-    for( var i in global_data["table"]["rows"] )
+    for( var i in TWmap.global_data["table"]["rows"] )
     {
         //Get naem of each row
-        index = global_data["table"]["rows"][i][countyIndex];
-        if(global_data["table"]["rows"][i][cityIndex]!="")
+        index = TWmap.global_data["table"]["rows"][i][countyIndex];
+        if(TWmap.global_data["table"]["rows"][i][cityIndex]!="")
         {
-            index += "-"+global_data["table"]["rows"][i][cityIndex];
-            if(global_data["table"]["rows"][i][villageIndex]!="")
-                index += "-"+global_data["table"]["rows"][i][villageIndex];
+            index += "-"+TWmap.global_data["table"]["rows"][i][cityIndex];
+            if(TWmap.global_data["table"]["rows"][i][villageIndex]!="")
+                index += "-"+TWmap.global_data["table"]["rows"][i][villageIndex];
         }
         //Put data into each row
         all_data[index] = [];
-        for( var j in global_data["table"]["cols"] )
+        for( var j in TWmap.global_data["table"]["cols"] )
         {
-            all_data[index][global_data["table"]["cols"][j]] = global_data["table"]["rows"][i][j];
+            all_data[index][TWmap.global_data["table"]["cols"][j]] = TWmap.global_data["table"]["rows"][i][j];
         }
     }
     //console.log(all_data);
@@ -51,6 +51,7 @@ var test_style_cb = function(d) {
         return '';
     }
     var rate = parseFloat(TWmap.processData(all_data[d.id]));
+
     return 'fill:' + TWmap.color(rate);
 };
 
