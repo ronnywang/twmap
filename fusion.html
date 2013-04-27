@@ -80,14 +80,14 @@ var handleData = function(data){
 
     var getIDFromProperties = function(properties){
         var ids = [];
-        if (properties.county) {
-            ids.push(properties.county.replace('台', '臺'));
+        if (properties.COUNTY) {
+            ids.push(properties.COUNTY.replace('台', '臺'));
         }
-        if (properties.town) {
-            ids.push(properties.town);
+        if (properties.TOWN) {
+            ids.push(properties.TOWN);
         }
-        if (properties.village) {
-            ids.push(properties.village);
+        if (properties.VILLAGE) {
+            ids.push(properties.VILLAGE);
         }
         return ids.join('-');
     };
