@@ -20,7 +20,6 @@ var g = svg.append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")").append("g");
 
 var ready = function(villages, data) {
-console.log(arguments);
     if ('undefined' !== typeof(options.init_data)) {
         options.init_data(data);
     }
@@ -30,14 +29,14 @@ console.log(arguments);
         .selectAll("path")
         .data(villages.features, function(d){
             var ids = [];
-            if (d.properties.county) {
-                ids.push(d.properties.county);
+            if (d.properties.COUNTY) {
+                ids.push(d.properties.COUNTY);
             }
-            if (d.properties.town) {
-                ids.push(d.properties.town);
+            if (d.properties.TOWN) {
+                ids.push(d.properties.TOWN);
             }
-            if (d.properties.village) {
-                ids.push(d.properties.village);
+            if (d.properties.VILLAGE) {
+                ids.push(d.properties.VILLAGE);
             }
             return ids.join('-');
         })
