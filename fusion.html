@@ -151,7 +151,7 @@ var handleData = function(data){
 }
 
 $.ajax(
-    'https://www.google.com/fusiontables/v1/query/?sql=' + encodeURIComponent('SELECT * FROM '+ params.docid), {
+    'https://www.googleapis.com/fusiontables/v1/query/?sql=' + encodeURIComponent('SELECT * FROM '+ params.docid), {
         dataType: 'jsonp',
         success: handleData,
         jsonp: 'jsonCallback'
