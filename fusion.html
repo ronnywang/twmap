@@ -48,32 +48,32 @@ var all_data = {};
 var handleData = function(data){
     var id;
     var rate;
-    params.value1_column = data.table.cols[parseInt(params.value1)];
-    params.value2_column = data.table.cols[parseInt(params.value2)];
+    params.value1_column = data.columns[parseInt(params.value1)];
+    params.value2_column = data.columns[parseInt(params.value2)];
     params.max_value1 = params.min_value1 = false;
-    for (var i = 0; i < data.table.rows.length; i ++) {
+    for (var i = 0; i < data.rows.length; i ++) {
         if (params.maptype == 1) { // 只有一個數字的話記最大最小值
-            params.max_value1 = (false === params.max_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.max(params.max_value1, parseFloat(data.table.rows[i][parseInt(params.value1)]));
-            params.min_value1 = (false === params.min_value1) ? data.table.rows[i][parseInt(params.value1)] : Math.min(params.min_value1, parseFloat(data.table.rows[i][parseInt(params.value1)]));
+            params.max_value1 = (false === params.max_value1) ? data.rows[i][parseInt(params.value1)] : Math.max(params.max_value1, parseFloat(data.rows[i][parseInt(params.value1)]));
+            params.min_value1 = (false === params.min_value1) ? data.rows[i][parseInt(params.value1)] : Math.min(params.min_value1, parseFloat(data.rows[i][parseInt(params.value1)]));
         } else {
-            rate = 1.0 * parseFloat(data.table.rows[i][parseInt(params.value1)]) / (parseFloat(data.table.rows[i][parseInt(params.value1)]) + parseFloat(data.table.rows[i][parseInt(params.value2)]));
+            rate = 1.0 * parseFloat(data.rows[i][parseInt(params.value1)]) / (parseFloat(data.rows[i][parseInt(params.value1)]) + parseFloat(data.rows[i][parseInt(params.value2)]));
             params.max_value1 = (false === params.max_value1) ? rate : Math.max(rate, params.max_value1);
             params.min_value1 = (false === params.min_value1) ? rate : Math.min(rate, params.min_value1);
         }
 
         id = [];
-        id.push(data.table.rows[i][parseInt(params.county_column, 10)].replace('台', '臺'));
+        id.push(data.rows[i][parseInt(params.county_column, 10)].replace('台', '臺'));
         if (!params.maplevel.match('county')) {
-            id.push(data.table.rows[i][parseInt(params.town_column, 10)].replace('台', '臺'));
+            id.push(data.rows[i][parseInt(params.town_column, 10)].replace('台', '臺'));
         }
         if (params.maplevel.match('village')) {
-            id.push(data.table.rows[i][parseInt(params.village_column, 10)]);
+            id.push(data.rows[i][parseInt(params.village_column, 10)]);
         }
         id = id.join('-');
 
         d = {};
-        for (var j = 0; j < data.table.cols.length; j ++) {
-            d[data.table.cols[j]] = data.table.rows[i][j];
+        for (var j = 0; j < data.columns.length; j ++) {
+            d[data.columns[j]] = data.rows[i][j];
         }
         all_data[id] = d;
     }
