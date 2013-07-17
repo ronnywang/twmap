@@ -149,7 +149,7 @@ $('#step1').submit(function(e){
     var docid = matches[1];
 
     $.ajax(
-        'https://www.googleapis.com/fusiontables/v1/query/?sql=' + encodeURIComponent('SELECT * FROM ' + docid) + '&callback=?', {
+        'https://www.googleapis.com/fusiontables/v1/query/?key=AIzaSyBidgN5U6Goh3lxDBQLH1kAR0N0c1rq3MA&sql=' + encodeURIComponent('SELECT * FROM ' + docid) + '&callback=?', {
         dataType: 'jsonp',
         success: function(ret){
             $('#step1').after(
