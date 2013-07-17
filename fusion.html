@@ -151,10 +151,9 @@ var handleData = function(data){
 }
 
 $.ajax(
-    'https://www.googleapis.com/fusiontables/v1/query/?key=AIzaSyBidgN5U6Goh3lxDBQLH1kAR0N0c1rq3MA&sql=' + encodeURIComponent('SELECT * FROM '+ params.docid), {
+    'https://www.googleapis.com/fusiontables/v1/query/?key=AIzaSyBidgN5U6Goh3lxDBQLH1kAR0N0c1rq3MA&sql=' + encodeURIComponent('SELECT * FROM '+ params.docid) + '&callback=?', {
         dataType: 'jsonp',
-        success: handleData,
-        jsonp: 'jsonCallback'
+        success: handleData
 });
 
 //--></script>
