@@ -86,7 +86,7 @@ $('#step3-form').submit(function(e){
 
     var i;
     var column_types = [];
-    for (i = 0; i < fusion_table_data.table.cols.length; i ++) {
+    for (i = 0; i < fusion_table_data.columns.length; i ++) {
         column_types[i] = $('#type-' + i).val();
     }
 
@@ -149,7 +149,7 @@ $('#step1').submit(function(e){
     var docid = matches[1];
 
     $.ajax(
-        'https://www.google.com/fusiontables/api/query/?sql=' + encodeURIComponent('SELECT * FROM ' + docid), {
+        'https://www.googleapis.com/fusiontables/v1/query/?sql=' + encodeURIComponent('SELECT * FROM ' + docid) + '&callback=?', {
         dataType: 'jsonp',
         success: function(ret){
             $('#step1').after(
@@ -164,15 +164,15 @@ $('#step1').submit(function(e){
             var thead_dom = $('<thead></thead>');
             var tr_dom = $('<tr></tr>');
             var i, j;
-            for (i = 0; i < ret.table.cols.length; i ++) {
-                tr_dom.append($('<td></td>').text(ret.table.cols[i]));
+            for (i = 0; i < ret.columns.length; i ++) {
+                tr_dom.append($('<td></td>').text(ret.columns[i]));
             }
             thead_dom.append(tr_dom);
 
             // 選單
             var select_dom;
             tr_dom = $('<tr></tr>');
-            for (i = 0; i < ret.table.cols.length; i ++) {
+            for (i = 0; i < ret.columns.length; i ++) {
                 select_dom = $('<select></select>').attr('id', 'type-' + i);
                 for (j in column_options) {
                     select_dom.append($('<option></option>').attr({value: j}).text(column_options[j]));
@@ -184,49 +184,48 @@ $('#step1').submit(function(e){
             $('#step2-div table').append(thead_dom);
 
             var tbody_dom = $('<tbody></tbody>');
-            if (!ret.table.rows.length) {
-                tbody_dom.append($('<tr></tr>').append($('<td></td>').attr('colspan', ret.table.cols.length).text('沒有任何資料')));
+            if (!ret.rows.length) {
+                tbody_dom.append($('<tr></tr>').append($('<td></td>').attr('colspan', ret.columns.length).text('沒有任何資料')));
                 $('#step2-div table').append(tbody_dom);
                 return;
             }
-            for (i = 0; i < ret.table.rows.length && i < 3; i ++) {
+            for (i = 0; i < ret.rows.length && i < 3; i ++) {
                 tr_dom = $('<tr></tr>');
-                for (j = 0; j < ret.table.rows[i].length; j ++) {
-                    tr_dom.append($('<td></td>').text(ret.table.rows[i][j]));
+                for (j = 0; j < ret.rows[i].length; j ++) {
+                    tr_dom.append($('<td></td>').text(ret.rows[i][j]));
                 }
                 tbody_dom.append(tr_dom);
             }
-            tbody_dom.append($('<tr></tr>').append($('<td></td>').attr('colspan', ret.table.cols.length).text('共有' + ret.table.rows.length + '筆資料')));
+            tbody_dom.append($('<tr></tr>').append($('<td></td>').attr('colspan', ret.columns.length).text('共有' + ret.rows.length + '筆資料')));
             $('#step2-div table').append(tbody_dom);
 
             // 先找縣市欄位
             var counties = ["宜蘭縣", "基隆市", "台北市", "新北市", "桃園縣", "新竹市", "新竹縣", "苗栗縣", "台中市", "南投縣", "彰化縣", "雲林縣", "嘉義市", "嘉義縣", "台南市", "高雄市", "屏東縣", "台東縣", "花蓮縣", "澎湖縣", "金門縣", "連江縣", "臺北市", "臺中市", "臺南市", "臺北縣", "高雄縣", "臺中縣"];
-            for (i = 0; i < ret.table.rows[0].length; i ++) {
-                if (-1 !== $.inArray(ret.table.rows[0][i], counties)) {
+            for (i = 0; i < ret.rows[0].length; i ++) {
+                if (-1 !== $.inArray(ret.rows[0][i], counties)) {
                     $('#type-' + i).val('county');
                 }
             }
 
             // 再找鄉鎮市區欄位(只找前 20 row)
-            for (i = 0; i < ret.table.rows.length && i < 20; i ++) {
-                for (j = 0; j < ret.table.rows[i].length; j ++) {
-                    if ('string' == typeof(ret.table.rows[i][j]) && ret.table.rows[i][j].match(/(區|鎮|鄉)$/)) {
+            for (i = 0; i < ret.rows.length && i < 20; i ++) {
+                for (j = 0; j < ret.rows[i].length; j ++) {
+                    if ('string' == typeof(ret.rows[i][j]) && ret.rows[i][j].match(/(區|鎮|鄉)$/)) {
                         $('#type-' + j).val('town');
                     }
                 }
             }
 
             // 再找村里欄位(只找前 20 row)
-            for (i = 0; i < ret.table.rows.length && i < 20; i ++) {
-                for (j = 0; j < ret.table.rows[i].length; j ++) {
-                    if ('string' == typeof(ret.table.rows[i][j]) && ret.table.rows[i][j].match(/(村|里)$/)) {
+            for (i = 0; i < ret.rows.length && i < 20; i ++) {
+                for (j = 0; j < ret.rows[i].length; j ++) {
+                    if ('string' == typeof(ret.rows[i][j]) && ret.rows[i][j].match(/(村|里)$/)) {
                         $('#type-' + j).val('village');
                     }
                 }
             }
             $('#step3-div').show();
-        },
-        jsonp: 'jsonCallback'
+        }
     });
 });
 //--></script>
